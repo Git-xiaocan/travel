@@ -1,0 +1,85 @@
+<!-- 头部 start -->
+<script>
+
+    $(function () {
+        $.get("user/findUser", {}, function (data) {
+            // {uid: 1,name:张三}
+            if (data.flag == true) {
+
+                $(".login").prop("style", "display:inline");
+                $(".login_out").prop("style", "display:none");
+                $("#span_userName").html("欢迎您," + data.name);
+            }
+
+
+        }, "json");
+
+        $.get("category/findAll", {}, function (data) {
+            var array = new Array();
+            for (var i = 0; i < data.length; i++) {
+                array[data[i].cid] = data[i];
+            }
+            array.forEach(function(item, index){
+
+                var str = "<li><a href='route_list.html?cid="+item.cid+"'>" + item.cname + "</a></li>";
+
+                $(".nav").append(str);
+            });
+            // for (var j =0 ;j < array.length ;j ++){
+            //
+            // }
+            $(".nav").append("<li><a href='route_list.html'>我的收藏</a></li>");
+
+        });
+    })
+
+
+</script>
+<header id="header">
+    <div class="top_banner">
+        <img src="images/top_banner.jpg" alt="">
+    </div>
+    <div class="shortcut">
+        <!-- 未登录状态  -->
+        <div class="login_out">
+            <a href="login.html">登录</a>
+            <a href="register.html">注册</a>
+        </div>
+        <!-- 登录状态  -->
+        <div class="login" style="display: none">
+
+            <span id="span_userName"></span>
+            <a href="myfavorite.html" class="collection">我的收藏</a>
+            <a href="javascript:location.href='user/exitLogin'">退出</a>
+        </div>
+    </div>
+    <div class="header_wrap">
+        <div class="topbar">
+            <div class="logo">
+                <a href="/"><img src="images/logo.jpg" alt=""></a>
+            </div>
+            <div class="search">
+                <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
+                <a href="javascript:;" class="search-button">搜索</a>
+            </div>
+            <div class="hottel">
+                <div class="hot_pic">
+                    <img src="images/hot_tel.jpg" alt="">
+                </div>
+                <div class="hot_tel">
+                    <p class="hot_time">客服热线(9:00-6:00)</p>
+                    <p class="hot_num">400-618-9090</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- 头部 end -->
+<!-- 首页导航 -->
+<div class="navitem">
+    <ul class="nav">
+        <li class="nav-active"><a href="index.html">首页</a></li>
+
+    </ul>
+</div>
+    
