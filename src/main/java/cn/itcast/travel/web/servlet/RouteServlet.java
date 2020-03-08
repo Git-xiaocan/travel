@@ -16,9 +16,15 @@ import java.io.IOException;
 @WebServlet("/route/*")
 public class RouteServlet extends BaseServlet {
     public void pageQuery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         String currentPageStr = req.getParameter("currentPage");
         String pagesizeStr = req.getParameter("pagesize");
         String cidStr = req.getParameter("cid");
+
+        String rname = req.getParameter("rname");
+        rname = new String(rname.getBytes("iso-8859-1"),"utf-8");
+
+
 
         int currentPage = 0;//当前页码 如果未指定默认 = 1
         if (currentPageStr != null && currentPageStr.length() > 0) {
@@ -41,7 +47,7 @@ public class RouteServlet extends BaseServlet {
         }
         //调用service 查询
         RouteService routeService = new RouteServiceImpl();
-        PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pagesize);
+        PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pagesize,rname);
         //将查询结果序列化未json
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(routePageBean);

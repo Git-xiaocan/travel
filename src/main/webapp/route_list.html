@@ -9,18 +9,31 @@
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" href="css/search.css">
     <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/getParameter.js"></script>
     <script>
         $(function () {
 
             //    拿到cid
-            var search = location.search;
-            var cid = search.split("=")[1];
-            load(cid, 1);
+
+            var cid = getParameter("cid");
+            var rname = getParameter("rname");
+            if (rname) {
+                rname = window.decodeURIComponent(rname);
+
+            } else {
+
+                rname = "";
+            }
+            if (cid) {
+                cid = 0;
+            }
+
+            load(cid, 1, rname);
 
         });
 
-        function load(cid, currentPage) {
-            $.get("route/pageQuery", {cid: cid, currentPage: currentPage}, function (data) {
+        function load(cid, currentPage, rname) {
+            $.get("route/pageQuery", {cid: cid, currentPage: currentPage, rname: rname}, function (data) {
                 /*
                   <div class="page_num_inf">
                         <i></i> 共
@@ -29,7 +42,7 @@
                  */
 
                 var page_num = ' <i></i> 共\n' +
-                    '                        <span>' + data.totalCount + '</span>页<span>' + data.totalPage + '</span>条'
+                    '                        <span>' + data.totalPage + '</span>页<span>' + data.totalCount + '</span>条'
                 $(".page_num_inf").html(page_num);
                 //展示分页页码
 
@@ -57,45 +70,29 @@
 
 
                 }
-                if (currentPage < 1) {
-                    currentPage = 1;
+
+                if (cid == "null" || cid == null) {
+                    cid = 0;
                 }
-                var lis = '<li onclick="javascript:load(' + cid + ',1)"><a href="#">首页</a></li>';
-                lis += '<li class="threeword" onclick="javascript:load(' + cid + ',' + (currentPage - 1) + ')"><a href="#">上一页</a></li>';
+                var lis = '<li onclick="javascript:load(' + cid + ',1,\'' + rname + '\')"><a href="javascript:void(0)">首页</a></li>';
+                lis += '<li class="threeword" onclick="javascript:load(' + cid + ',' + ((currentPage - 1) < 1 ? 1 : (currentPage - 1)) + ',\'' + rname + '\')"><a href="javascript:void(0)">上一页</a></li>';
 
                 for (var i = begin; i <= end; i++) {
                     if (currentPage == i) {
-                        lis += '<li  class="curPage" onclick="javascript:load(' + cid + ',' + i + ')"><a href="#">' + i + '</a></li>'
+                        lis += '<li  class="curPage" onclick="javascript:load(' + cid + ',' + i + ',\'' + rname + '\')"><a href="javascript:void(0)">' + i + '</a></li>'
                     } else {
                         //    <li class="threeword"><a href="#">上一页</a></li>
-                        lis += '<li onclick="javascript:load(' + cid + ',' + i + ')"><a href="#">' + i + '</a></li>'
+                        lis += '<li onclick="javascript:load(' + cid + ',' + i + ',\'' + rname + '\')"><a href="javascript:void(0)">' + i + '</a></li>'
                     }
 
 
                 }
-                lis += '<li class="threeword" onclick="load(' + cid + ',' + (currentPage + 1) + ')"><a href="#">下一页</a></li>';
-                lis += '<li class="threeword" onclick="load(' + cid + ',' + data.totalPage + ')"><a href="#">末页</a></li>';
+                lis += '<li class="threeword" onclick="load(' + cid + ',' + ((currentPage + 1) > data.totalPage ? data.totalPage : (currentPage + 1)) + ',\'' + rname + '\')"><a href="javascript:void(0)">下一页</a></li>';
+                lis += '<li class="threeword" onclick="load(' + cid + ',' + data.totalPage + ',\'' + rname + '\')"><a href="javascript:void(0)">末页</a></li>';
                 $(".pageNum>ul").html(lis);
 
                 //填充商品信息
-                /*
-                 <li>
-                            <div class="img"><img src="images/04-search_03.jpg" alt=""></div>
-                            <div class="text1">
-                                <p>【减100元 含除夕/春节出发】广州增城三英温泉度假酒店/自由行套票</p>
-                                <br/>
-                                <p>1-2月出发，网付立享￥1099/2人起！爆款位置有限，抢完即止！</p>
-                            </div>
-                            <div class="price">
-                                <p class="price_num">
-                                    <span>&yen;</span>
-                                    <span>299</span>
-                                    <span>起</span>
-                                </p>
-                                <p><a href="route_detail.html">查看详情</a></p>
-                            </div>
-                        </li>
-                 */
+
                 var route_lis = '';
                 for (var i = 0; i < data.list.length; i++) {
 
@@ -112,7 +109,7 @@
                         '                                    <span>' + data.list[i].price + '</span>\n' +
                         '                                    <span>起</span>\n' +
                         '                                </p>\n' +
-                        '                                <p><a href="route_detail.html">查看详情</a></p>\n' +
+                        '                                <p><a href="route_detail.html?rid='+data.list[i].rid+'">查看详情</a></p>\n' +
                         '                            </div>\n' +
                         '                        </li>';
                     route_lis += route_li;

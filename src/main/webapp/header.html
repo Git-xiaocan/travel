@@ -1,4 +1,5 @@
 <!-- 头部 start -->
+<script src="js/getParameter.js"></script>
 <script>
 
     $(function () {
@@ -19,9 +20,9 @@
             for (var i = 0; i < data.length; i++) {
                 array[data[i].cid] = data[i];
             }
-            array.forEach(function(item, index){
+            array.forEach(function (item, index) {
 
-                var str = "<li><a href='route_list.html?cid="+item.cid+"'>" + item.cname + "</a></li>";
+                var str = "<li><a href='route_list.html?cid=" + item.cid + "'>" + item.cname + "</a></li>";
 
                 $(".nav").append(str);
             });
@@ -31,6 +32,28 @@
             $(".nav").append("<li><a href='route_list.html'>我的收藏</a></li>");
 
         });
+
+
+        $("#search-button").click(function () {
+            var rname = $("#search_input").val();
+            if(rname){
+                // 此处 rname 可能是乱码
+                //对字符串进行转码
+                rname = window.decodeURIComponent(rname);
+            }
+
+           var  cid = getParameter("cid");
+           if (cid==null||cid.length==0||cid=="null"||cid==""){
+
+               location.href = "route_list.html?rname="+rname;
+           }else{
+               location.href = "route_list.html?cid="+cid+"&rname="+rname;
+
+           }
+
+
+        })
+
     })
 
 
@@ -59,8 +82,9 @@
                 <a href="/"><img src="images/logo.jpg" alt=""></a>
             </div>
             <div class="search">
-                <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
-                <a href="javascript:;" class="search-button">搜索</a>
+                <input name="" type="text" placeholder="请输入路线名称" id="search_input" class="search_input"
+                       autocomplete="off">
+                <a href="javascript:;" id="search-button" class="search-button">搜索</a>
             </div>
             <div class="hottel">
                 <div class="hot_pic">

@@ -31,6 +31,14 @@
             $(".nav").append("<li><a href='route_list.html'>我的收藏</a></li>");
 
         });
+
+
+        $("#search-button").click(function () {
+           var res = $("#search_input").val();
+
+                location.href="route_list.html";
+        })
+
     })
 
 
@@ -59,8 +67,8 @@
                 <a href="/"><img src="images/logo.jpg" alt=""></a>
             </div>
             <div class="search">
-                <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
-                <a href="javascript:;" class="search-button">搜索</a>
+                <input name="" type="text" placeholder="请输入路线名称"  id="search_input" class="search_input" autocomplete="off">
+                <a href="javascript:;"  id="search-button" class="search-button">搜索</a>
             </div>
             <div class="hottel">
                 <div class="hot_pic">
